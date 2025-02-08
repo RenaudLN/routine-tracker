@@ -3,6 +3,7 @@ from dash import Dash, Input, Output, _dash_renderer, page_container
 from dash_iconify import DashIconify
 
 from routine import ids
+from routine.components import footer_link
 
 _dash_renderer._set_react_version("18.2.0")
 app = Dash(
@@ -32,58 +33,31 @@ app.layout = dmc.MantineProvider(
                     px="1.5rem",
                     align="center",
                     justify="space-between",
+                    maw="40rem",
+                    mx="auto",
                 ),
             ),
             dmc.AppShellMain(page_container),
             dmc.AppShellFooter(
                 dmc.Group(
                     [
-                        dmc.Anchor(
-                            dmc.Stack(
-                                [DashIconify(icon="carbon:home", height=16), dmc.Text("Home", size="xs", c="dimmed")],
-                                gap="0.125rem",
-                                align="center",
-                            ),
-                            href="/",
-                            c="inherit",
-                            underline=False,
-                        ),
-                        dmc.Anchor(
-                            dmc.Stack(
-                                [
-                                    DashIconify(icon="carbon:chart-radial", height=16),
-                                    dmc.Text("Stats", size="xs", c="dimmed"),
-                                ],
-                                gap="0.125rem",
-                                align="center",
-                            ),
-                            href="/stats",
-                            c="inherit",
-                            underline=False,
-                        ),
-                        dmc.Anchor(
-                            dmc.Stack(
-                                [
-                                    DashIconify(icon="carbon:user", height=16),
-                                    dmc.Text("Profile", size="xs", c="dimmed"),
-                                ],
-                                gap="0.125rem",
-                                align="center",
-                            ),
-                            href="/profile",
-                            c="inherit",
-                            underline=False,
-                        ),
+                        footer_link("Home", "carbon:home", "/"),
+                        footer_link("Stats", "carbon:chart-radial", "/stats"),
+                        footer_link("Profile", "carbon:user", "/profile"),
                     ],
                     h="100%",
                     px="1.5rem",
                     align="center",
-                    justify="space-around",
+                    grow=True,
+                    maw="40rem",
+                    mx="auto",
                 ),
             ),
         ],
         header={"height": "3rem"},
         footer={"height": "3rem"},
+        maw="40rem",
+        mx="auto",
     ),
     theme={
         "fontFamily": "'Atkinson-HyperLegible', sans-serif",

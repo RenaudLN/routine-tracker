@@ -38,3 +38,18 @@
 :root {
     font-family: "Atkinson-Hyperlegible", "Helvetica", "Arial", sans-serif !important;
 }
+
+.footer-link {
+    &:hover,
+    &:focus-within {
+        color: var(--mantine-color-anchor) !important;
+    }
+    &:hover p,
+    &:focus-within p {
+        color: var(--mantine-color-anchor) !important;
+    }
+    transition: color 150ms;
+    & p {
+        transition: color 150ms;
+    }
+}
