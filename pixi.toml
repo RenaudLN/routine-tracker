@@ -1,0 +1,25 @@
+[project]
+authors = ["RenaudLN <renaudlaine31@gmail.com>"]
+channels = ["conda-forge"]
+description = "Routine tracker app"
+name = "routine-tracker"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[environments]
+default = { features = ["dev"], solve-group = "default" }
+app = { solve-group = "default" }
+
+[dependencies]
+python = "3.12.*"
+gunicorn = ">=23.0.0,<24"
+
+[pypi-dependencies]
+dash = "==3.0.0rc1"
+dash-mantine-components = "==1.0.0rc1"
+surrealdb = ">=1.0.3, <2"
+routine = { editable = true, path = "." }
+
+[feature.dev.dependencies]
+ruff = "*"
+pre-commit = "*"
