@@ -13,13 +13,18 @@ app = { solve-group = "default" }
 [dependencies]
 python = "3.12.*"
 gunicorn = ">=23.0.0,<24"
+dash = "<3"
+dash-mantine-components = "<1"
+dash-pydantic-form = "*"
 
 [pypi-dependencies]
-dash = "==3.0.0rc1"
-dash-mantine-components = "==1.0.0rc1"
 surrealdb = ">=1.0.3, <2"
 routine = { editable = true, path = "." }
 
 [feature.dev.dependencies]
 ruff = "*"
 pre-commit = "*"
+
+[feature.dev.tasks]
+lint = "pre-commit run --all-files"
+dev = "python routine/app.py"
