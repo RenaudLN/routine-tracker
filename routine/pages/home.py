@@ -21,8 +21,6 @@ def layout(**_kwargs):
                 form_id="home",
                 store_progress="local",
                 restore_behavior="auto",
-                # debounce_inputs=500,
-                read_only=True,
             ),
         ],
     )
