@@ -10,26 +10,26 @@ from routine.data import moods
 class Food(BaseModel):
     """Food model."""
 
-    had_breakfast: bool = Field(default=False, title="Had breakfast", repr_kwargs={"n_cols": 1.0})
+    had_breakfast: bool = Field(default=False, title="Breakfast", repr_kwargs={"n_cols": 1.0})
     breakfast: str | None = Field(
         default=None,
-        title="Breakfast",
+        title="",
         repr_type="Textarea",
         repr_kwargs={"visible": ("had_breakfast", "==", True), "n_cols": 1.0},
     )
 
-    had_lunch: bool = Field(default=False, title="Had lunch", repr_kwargs={"n_cols": 1.0})
+    had_lunch: bool = Field(default=False, title="Lunch", repr_kwargs={"n_cols": 1.0})
     lunch: str | None = Field(
         default=None,
-        title="Lunch",
+        title="",
         repr_type="Textarea",
         repr_kwargs={"visible": ("had_lunch", "==", True), "n_cols": 1.0},
     )
 
-    had_dinner: bool = Field(default=False, title="Had dinner", repr_kwargs={"n_cols": 1.0})
+    had_dinner: bool = Field(default=False, title="Dinner", repr_kwargs={"n_cols": 1.0})
     dinner: str | None = Field(
         default=None,
-        title="Dinner",
+        title="",
         repr_type="Textarea",
         repr_kwargs={"visible": ("had_dinner", "==", True), "n_cols": 1.0},
     )

@@ -1,9 +1,16 @@
+from contextlib import suppress
+
 import dash_mantine_components as dmc
+import dotenv
 from dash import Dash, Input, Output, _dash_renderer, page_container
 from dash_iconify import DashIconify
 
 from routine import ids
 from routine.components import footer_link
+
+with suppress(ImportError):
+    dotenv.load_dotenv()
+
 
 _dash_renderer._set_react_version("18.2.0")
 app = Dash(
@@ -11,6 +18,7 @@ app = Dash(
     external_stylesheets=dmc.styles.ALL,
     use_pages=True,
 )
+server = app.server
 
 app.layout = dmc.MantineProvider(
     dmc.AppShell(
@@ -42,6 +50,7 @@ app.layout = dmc.MantineProvider(
                 dmc.Group(
                     [
                         footer_link("My day", "carbon:home", "/"),
+                        footer_link("Past", "carbon:calendar-heat-map", "/past"),
                         footer_link("Stats", "carbon:chart-radial", "/stats"),
                         footer_link("Profile", "carbon:user", "/profile"),
                     ],
@@ -53,6 +62,8 @@ app.layout = dmc.MantineProvider(
                     mx="auto",
                 ),
             ),
+            dmc.NotificationProvider(position="top-right"),
+            dmc.Box(id=ids.notifications_wrapper),
         ],
         header={"height": "3rem"},
         footer={"height": "3rem"},
@@ -79,6 +90,15 @@ app.layout = dmc.MantineProvider(
                     "style": {"borderRadius": "calc(0.75rem * var(--mantine-scale))"},
                     "mb": 0,
                 },
+            },
+            "TextInput": {
+                "defaultProps": {"debounce": True},
+            },
+            "NumberInput": {
+                "defaultProps": {"debounce": True},
+            },
+            "Textarea": {
+                "defaultProps": {"debounce": True},
             },
         },
     },

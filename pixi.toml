@@ -21,10 +21,18 @@ dash-pydantic-form = "*"
 surrealdb = ">=1.0.3, <2"
 routine = { editable = true, path = "." }
 
+[tasks]
+serve = "gunicorn routine.app:server"
+
 [feature.dev.dependencies]
 ruff = "*"
 pre-commit = "*"
+ipykernel = ">=6.29.5,<7"
+pixi-kernel = ">=0.6.1,<0.7"
 
 [feature.dev.tasks]
 lint = "pre-commit run --all-files"
 dev = "python routine/app.py"
+
+[feature.dev.pypi-dependencies]
+python-dotenv = ">=1.0.1, <2"
