@@ -1,14 +1,15 @@
 from contextlib import suppress
 
 import dash_mantine_components as dmc
-import dotenv
 from dash import Dash, Input, Output, _dash_renderer, page_container
 from dash_iconify import DashIconify
 
 from routine import ids
 from routine.components import footer_link
 
-with suppress(ImportError):
+with suppress(ModuleNotFoundError):
+    import dotenv
+
     dotenv.load_dotenv()
 
 

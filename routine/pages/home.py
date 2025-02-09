@@ -2,7 +2,6 @@ import dash_mantine_components as dmc
 from dash import Input, Output, callback, no_update, register_page
 from dash_pydantic_form import ModelForm
 
-from routine import ids
 from routine.db import get_db
 from routine.models import Routine
 
@@ -21,25 +20,25 @@ def layout(**_kwargs):
                 form_id="home",
                 store_progress="local",
                 restore_behavior="auto",
+                fields_repr={"date": {"visible": False}},
             ),
         ],
     )
 
 
 @callback(
-    Output(ids.notifications_wrapper, "children"),
     Output(ModelForm.ids.errors("routine", "home"), "data"),
     Input(ModelForm.ids.main("routine", "home"), "data"),
     prevent_initial_callback=True,
 )
-def update_notifications(data):
+def save_my_day(data):
     if not data:
         return no_update
 
     try:
         routine = Routine.model_validate(data)
     except Exception as exc:
-        return no_update, {":".join([str(x) for x in error["loc"]]): "Invalid value" for error in exc.errors()}
+        return {":".join([str(x) for x in error["loc"]]): "Invalid value" for error in exc.errors()}
 
     db = get_db()
     data = routine.model_dump(mode="json")
@@ -48,8 +47,4 @@ def update_notifications(data):
         data,
     )
 
-    return dmc.Notification(
-        message="Yay",
-        id="notification-home",
-        action="show",
-    ), None
+    return None
