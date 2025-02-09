@@ -41,7 +41,7 @@ app.layout = dmc.MantineProvider(
             dmc.AppShellFooter(
                 dmc.Group(
                     [
-                        footer_link("Home", "carbon:home", "/"),
+                        footer_link("My day", "carbon:home", "/"),
                         footer_link("Stats", "carbon:chart-radial", "/stats"),
                         footer_link("Profile", "carbon:user", "/profile"),
                     ],
@@ -61,6 +61,26 @@ app.layout = dmc.MantineProvider(
     ),
     theme={
         "fontFamily": "'Atkinson-HyperLegible', sans-serif",
+        "primaryColor": "yellow",
+        "defaultRadius": "md",
+        "components": {
+            "Accordion": {
+                "defaultProps": {
+                    "style": {"display": "flex", "flexDirection": "column", "gap": "0.5rem"},
+                },
+            },
+            "AccordionPanel": {
+                "defaultProps": {"pt": "0.5rem"},
+            },
+            "AccordionItem": {
+                "defaultProps": {
+                    "bg": "color-mix(in srgb, var(--mantine-color-gray-light), #0000 90%)",
+                    "bd": "1px solid var(--mantine-color-gray-light)",
+                    "style": {"borderRadius": "calc(0.75rem * var(--mantine-scale))"},
+                    "mb": 0,
+                },
+            },
+        },
     },
     defaultColorScheme="auto",
     id=ids.mantine_provider,

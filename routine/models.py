@@ -42,8 +42,8 @@ class Food(BaseModel):
     )
 
 
-class Exercise(BaseModel):
-    """Exercise model."""
+class Activity(BaseModel):
+    """Activity model"""
 
     name: str
     duration: int = Field(default=0, title="Duration", repr_kwargs={"placeholder": "min", "suffix": " min"}, ge=0)
@@ -52,6 +52,15 @@ class Exercise(BaseModel):
 
     def __str__(self) -> str:
         return self["name"] or "-"
+
+
+class Exercise(BaseModel):
+    """Exercise model."""
+
+    activities: list[Activity] = Field(
+        default_factory=list,
+    )
+    steps: int = Field(default=0, ge=0)
 
 
 class Mood(BaseModel):
@@ -97,8 +106,8 @@ class Routine(BaseModel):
             gap="xs",
         ),
     )
-    exercise: list[Exercise] = Field(
-        default_factory=list,
+    exercise: Exercise | None = Field(
+        default=None,
         title=dmc.Group(
             [
                 DashIconify(icon="icon-park-outline:sport", height=20),

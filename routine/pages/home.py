@@ -12,7 +12,7 @@ def layout(**_kwargs):
         dmc.Box(
             p="1rem 1.5rem",
             children=[
-                dmc.Title("My day", order=3, mb="1.5rem"),
+                dmc.Title("My day", order=3, mb="1rem"),
                 ModelForm(
                     Routine,
                     aio_id="routine",
@@ -20,17 +20,6 @@ def layout(**_kwargs):
                     store_progress="local",
                     restore_behavior="auto",
                     debounce_inputs=500,
-                    # fields_repr={
-                    #     "food": {
-                    #         "title": dmc.Group(
-                    #             [
-                    #                 DashIconify(icon="fluent:food-20-regular", height=18),
-                    #                 dmc.Text("Food"),
-                    #             ],
-                    #             gap="xs",
-                    #         ),
-                    #     }
-                    # },
                 ),
             ],
         ),

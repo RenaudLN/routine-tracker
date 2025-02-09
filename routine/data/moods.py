@@ -89,6 +89,7 @@ moods = [
     "Flirty",
     "Focused",
     "Friendly",
+    "Frustrated",
     "Fulfilled",
     "Full",
     "Funny",
