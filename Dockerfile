@@ -6,6 +6,6 @@ WORKDIR $APP_HOME
 COPY . ./
 
 # Install package and its dependencies.
-RUN pixi install
+RUN pixi install -e app --locked
 
 CMD pixi r serve
