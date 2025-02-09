@@ -9,6 +9,7 @@ moods = [
     "Amorous",
     "Amused",
     "Animated",
+    "Anxious",
     "Appreciative",
     "Astonished",
     "Audacious",

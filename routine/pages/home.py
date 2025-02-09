@@ -1,6 +1,10 @@
+from datetime import date
+
 import dash_mantine_components as dmc
 from dash import Input, Output, callback, no_update, register_page
 from dash_pydantic_form import ModelForm
+from dash_pydantic_utils import model_construct_recursive
+from surrealdb import RecordID
 
 from routine.db import get_db
 from routine.models import Routine
@@ -10,16 +14,20 @@ register_page(__name__, path="/", title="My day", name="Home")
 
 def layout(**_kwargs):
     """Home page layout."""
+    db = get_db()
+    data = db.select(RecordID("day", date.today().strftime("%Y-%m-%d")))
+
+    routine = (
+        model_construct_recursive(data, Routine) if data is not None else Routine.model_construct(date=date.today())
+    )
     return dmc.Box(
         p="1rem 1.5rem",
         children=[
             dmc.Title("My day", order=3, mb="1rem"),
             ModelForm(
-                Routine,
+                routine,
                 aio_id="routine",
                 form_id="home",
-                store_progress="local",
-                restore_behavior="auto",
                 fields_repr={"date": {"visible": False}},
             ),
         ],
@@ -42,9 +50,6 @@ def save_my_day(data):
 
     db = get_db()
     data = routine.model_dump(mode="json")
-    db.upsert(
-        f"day:{data['date']}",
-        data,
-    )
+    db.upsert(RecordID("day", data["date"]), data)
 
     return None

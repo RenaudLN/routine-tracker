@@ -39,6 +39,8 @@ def layout(**_kwargs):
 def update_past(date):
     db = get_db()
     data = db.select(RecordID("day", date))
+    if data is None:
+        return dmc.Alert(f"No data for {date}", color="teal")
     routine = Routine.model_validate(data)
     return ModelForm(
         routine,
