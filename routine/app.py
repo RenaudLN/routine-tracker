@@ -1,7 +1,7 @@
 from contextlib import suppress
 
 import dash_mantine_components as dmc
-from dash import Dash, Input, Output, _dash_renderer, page_container
+from dash import ClientsideFunction, Dash, Input, Output, _dash_renderer, dcc, page_container
 from dash_iconify import DashIconify
 
 from routine import ids
@@ -18,6 +18,10 @@ app = Dash(
     __name__,
     external_stylesheets=dmc.styles.ALL,
     use_pages=True,
+    routing_callback_inputs={
+        "timezone": Input(ids.client_timezone, "data"),
+    },
+    suppress_callback_exceptions=True,
 )
 server = app.server
 
@@ -65,6 +69,7 @@ app.layout = dmc.MantineProvider(
             ),
             dmc.NotificationProvider(position="top-right"),
             dmc.Box(id=ids.notifications_wrapper),
+            dcc.Store(id=ids.client_timezone),
         ],
         header={"height": "3rem"},
         footer={"height": "3rem"},
@@ -109,10 +114,16 @@ app.layout = dmc.MantineProvider(
 
 
 app.clientside_callback(
-    """(isLightMode) => isLightMode ? 'light' : 'dark'""",
+    ClientsideFunction(namespace="base", function_name="switchScheme"),
     Output(ids.mantine_provider, "forceColorScheme"),
     Input(ids.scheme_switch, "checked"),
     prevent_initial_callback=True,
+)
+
+app.clientside_callback(
+    ClientsideFunction(namespace="base", function_name="getTimezone"),
+    Output(ids.client_timezone, "data"),
+    Input(ids.client_timezone, "id"),
 )
 
 

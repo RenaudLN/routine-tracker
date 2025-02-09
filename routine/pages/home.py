@@ -1,21 +1,28 @@
-from datetime import date
+from datetime import date, datetime
 
 import dash_mantine_components as dmc
+import pytz
 from dash import Input, Output, callback, no_update, register_page
 from dash_pydantic_form import ModelForm
 from dash_pydantic_utils import model_construct_recursive
 from surrealdb import RecordID
 
+from routine.components import page_loader
 from routine.db import get_db
 from routine.models import Routine
 
-register_page(__name__, path="/", title="My day", name="Home")
+register_page(__name__, path="/", name="My day")
 
 
-def layout(**_kwargs):
+def layout(timezone: str | None = None, **_kwargs):
     """Home page layout."""
+    if timezone is None:
+        return page_loader()
+
+    today = datetime.now(pytz.timezone(timezone)).strftime("%Y-%m-%d")
+
     db = get_db()
-    data = db.select(RecordID("day", date.today().strftime("%Y-%m-%d")))
+    data = db.select(RecordID("day", today))
 
     routine = (
         model_construct_recursive(data, Routine) if data is not None else Routine.model_construct(date=date.today())
