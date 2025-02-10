@@ -42,7 +42,13 @@ app.layout = dmc.MantineProvider(
             dmc.AppShellHeader(
                 dmc.Group(
                     [
-                        dmc.Text("Routine", size="lg", fw="bold"),
+                        dmc.Group(
+                            [
+                                dmc.Image(src="/assets/logo-color.svg", w="1.5rem"),
+                                dmc.Text("Routine", size="lg", fw="bold"),
+                            ],
+                            gap="xs",
+                        ),
                         dmc.Switch(
                             offLabel=DashIconify(icon="radix-icons:moon", height=18),
                             onLabel=DashIconify(icon="radix-icons:sun", height=18),

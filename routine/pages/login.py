@@ -65,14 +65,13 @@ def layout(**_kwargs):
                     ),
                     dmc.Group(
                         [
-                            dmc.Image(src="/assets/logo.svg", w="2.5rem"),
+                            dmc.Image(src="/assets/logo-color.svg", w="2.5rem"),
                             dmc.Title("Welcome to Routine", order=3, my="1rem 0.5rem"),
                         ],
                     ),
                     login_form,
                     dmc.Button("Log in", id=ids.login_btn, style={"alignSelf": "stretch"}),
                 ],
-                align="center",
                 pos="relative",
             ),
         ],
