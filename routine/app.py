@@ -24,6 +24,7 @@ app = Dash(
         "timezone": Input(ids.client_timezone, "data"),
     },
     suppress_callback_exceptions=True,
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
 )
 server = app.server
 
@@ -53,7 +54,7 @@ app.layout = dmc.MantineProvider(
                         ),
                     ],
                     h="100%",
-                    px="1.5rem",
+                    px="1rem",
                     align="center",
                     justify="space-between",
                     maw="40rem",
@@ -70,7 +71,7 @@ app.layout = dmc.MantineProvider(
                         footer_link("Profile", "fluent:person-16-regular", "/profile"),
                     ],
                     h="100%",
-                    px="1.5rem",
+                    px="1rem",
                     align="center",
                     grow=True,
                     maw="40rem",

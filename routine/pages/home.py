@@ -31,7 +31,7 @@ def layout(timezone: str | None = None, **_kwargs):
         model_construct_recursive(data, Routine) if data is not None else Routine.model_construct(date=date.today())
     )
     return dmc.Box(
-        p="1rem 1.5rem",
+        p="1rem",
         children=[
             dmc.Title("My day", order=3, mb="1rem"),
             ModelForm(

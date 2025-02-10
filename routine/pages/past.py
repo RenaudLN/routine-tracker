@@ -31,7 +31,7 @@ def layout(timezone: str | None = None, **_kwargs):
 
     return (
         dmc.Box(
-            p="1rem 1.5rem",
+            p="1rem",
             children=[
                 dmc.ScrollArea(
                     dmc.Group(

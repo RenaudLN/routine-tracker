@@ -13,7 +13,7 @@ def layout(**_kwargs):
     """Profile page layout."""
 
     return dmc.Stack(
-        p="1rem 1.5rem",
+        p="1rem",
         children=[
             dmc.Text(f"Logged in as {session['user']['email']}"),
             dmc.Button("Logout", id=ids.logout_btn, leftSection=DashIconify(icon="carbon:logout", height=16)),
