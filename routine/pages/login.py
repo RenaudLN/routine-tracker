@@ -57,26 +57,24 @@ def layout(**_kwargs):
             "bg": "color-mix(in srgb, var(--mantine-color-body), var(--mantine-color-text) 5%)",
         },
         children=[
-            dmc.Card(
-                dmc.Stack(
-                    [
-                        dmc.Group(
-                            [
-                                dmc.Image(src="/assets/logo.svg", w="2.5rem"),
-                                dmc.Title("Welcome to Routine", order=3, my="1rem 0.5rem"),
-                            ],
-                        ),
-                        login_form,
-                        dmc.Checkbox(
-                            "Remember me",
-                            id=ids.login_remember,
-                            persistence=True,
-                            style={"alignSelf": "start"},
-                        ),
-                        dmc.Button("Log in", id=ids.login_btn, style={"alignSelf": "stretch"}),
-                    ],
-                    align="center",
-                )
+            dmc.Stack(
+                [
+                    dmc.Group(
+                        [
+                            dmc.Image(src="/assets/logo.svg", w="2.5rem"),
+                            dmc.Title("Welcome to Routine", order=3, my="1rem 0.5rem"),
+                        ],
+                    ),
+                    login_form,
+                    dmc.Checkbox(
+                        "Remember me",
+                        id=ids.login_remember,
+                        persistence=True,
+                        style={"alignSelf": "start"},
+                    ),
+                    dmc.Button("Log in", id=ids.login_btn, style={"alignSelf": "stretch"}),
+                ],
+                align="center",
             ),
         ],
     )
@@ -93,7 +91,7 @@ def layout(**_kwargs):
 )
 def sign_in_with_password(_t1, _t2, form_data: dict):
     """Sign in with password."""
-    if not form_data or not form_data["password"]:
+    if not form_data or not form_data.get("password"):
         return no_update
 
     api_key = os.getenv("FIREBASE_API_KEY")
@@ -105,22 +103,22 @@ def sign_in_with_password(_t1, _t2, form_data: dict):
         )
     except requests.exceptions.Timeout:
         logging.exception("Failed to sign in after timeout")
-        return no_update, {"password": "Request timed out"}, no_update
+        return no_update, {"password": "Request timed out"}
     except Exception:
         logging.exception("Failed to sign in with unknown error")
-        return no_update, {"password": "An error occurred, please try again"}, no_update
+        return no_update, {"password": "An error occurred, please try again"}
 
     if not response.ok:
-        return no_update, {"password": "Invalid email or password"}, no_update
+        return no_update, {"password": "Invalid email or password"}
 
     try:
         content = response.json()
     except Exception:
         logging.exception("Failed to sign in with unknown error")
-        return no_update, {"password": "An error occurred, please try again"}, no_update
+        return no_update, {"password": "An error occurred, please try again"}
 
     session["user"] = {"email": content["email"]}
-    return "/", no_update, 1
+    return "/", no_update
 
 
 # Toggle the 'remember email' behaviour

@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug app",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "routine/app.py:server",
+                "FLASK_DEBUG": "1",
+                "REACT_VERSION": "18.2.0",
+                "DEBUG": "1",
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "jinja": true,
+            "autoStartBrowser": false,
+            "justMyCode": false
+        },
+    ]
+}
