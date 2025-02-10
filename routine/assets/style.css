@@ -40,12 +40,21 @@
 }
 
 .footer-link {
+    --hover-color: color-mix(in srgb, var(--mantine-color-anchor), var(--mantine-color-text) 50%);
+    --active-color: var(--mantine-color-anchor);
+
     &:hover,
     &:focus-within {
-        color: var(--mantine-color-anchor) !important;
+        color: var(--hover-color) !important;
+    }
+    &.active {
+        color: var(--active-color) !important;
     }
     &:hover p,
     &:focus-within p {
+        color: var(--hover-color) !important;
+    }
+    &.active p {
         color: var(--mantine-color-anchor) !important;
     }
     transition: color 150ms;

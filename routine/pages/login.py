@@ -35,8 +35,6 @@ login_form = ModelForm(
     form_id="login-form",
     container_kwargs={"style": {"width": "100%"}},
     submit_on_enter=True,
-    store_progress=False,
-    restore_behavior="auto",
 )
 
 
@@ -51,7 +49,6 @@ def layout(**_kwargs):
         closeOnEscape=False,
         withCloseButton=False,
         opened=True,
-        centered=True,
         radius="md",
         overlayProps={
             "bg": "color-mix(in srgb, var(--mantine-color-body), var(--mantine-color-text) 5%)",
@@ -59,6 +56,13 @@ def layout(**_kwargs):
         children=[
             dmc.Stack(
                 [
+                    dmc.LoadingOverlay(
+                        id=ids.login_overlay,
+                        overlayProps={"blur": 2, "radius": "md"},
+                        zIndex=10,
+                        visible=False,
+                        m="-1rem",
+                    ),
                     dmc.Group(
                         [
                             dmc.Image(src="/assets/logo.svg", w="2.5rem"),
@@ -66,15 +70,10 @@ def layout(**_kwargs):
                         ],
                     ),
                     login_form,
-                    # dmc.Checkbox(
-                    #     "Remember me",
-                    #     id=ids.login_remember,
-                    #     persistence=True,
-                    #     style={"alignSelf": "start"},
-                    # ),
                     dmc.Button("Log in", id=ids.login_btn, style={"alignSelf": "stretch"}),
                 ],
                 align="center",
+                pos="relative",
             ),
         ],
     )
@@ -83,6 +82,7 @@ def layout(**_kwargs):
 @public_callback(
     Output(_ID_LOCATION, "href", allow_duplicate=True),
     Output(login_form.ids.errors, "data", allow_duplicate=True),
+    Output(ids.login_overlay, "visible"),
     Input(ids.login_btn, "n_clicks"),
     Input(login_form.ids.form, "data-submit"),
     State(login_form.ids.main, "data"),
@@ -103,28 +103,19 @@ def sign_in_with_password(_t1, _t2, form_data: dict):
         )
     except requests.exceptions.Timeout:
         logging.exception("Failed to sign in after timeout")
-        return no_update, {"password": "Request timed out"}
+        return no_update, {"password": "Request timed out"}, no_update
     except Exception:
         logging.exception("Failed to sign in with unknown error")
-        return no_update, {"password": "An error occurred, please try again"}
+        return no_update, {"password": "An error occurred, please try again"}, no_update
 
     if not response.ok:
-        return no_update, {"password": "Invalid email or password"}
+        return no_update, {"password": "Invalid email or password"}, no_update
 
     try:
         content = response.json()
     except Exception:
         logging.exception("Failed to sign in with unknown error")
-        return no_update, {"password": "An error occurred, please try again"}
+        return no_update, {"password": "An error occurred, please try again"}, no_update
 
     session["user"] = {"email": content["email"]}
-    return "/", no_update
-
-
-# # Toggle the 'remember email' behaviour
-# clientside_callback(
-#     ClientsideFunction(namespace="base", function_name="switchRememberMe"),
-#     Output(login_form.ids.form, "data-storeprogress"),
-#     Output(login_form.ids.form, "data-getvalues"),
-#     Input(ids.login_remember, "checked"),
-# )
+    return "/", no_update, True

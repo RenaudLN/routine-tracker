@@ -64,10 +64,10 @@ app.layout = dmc.MantineProvider(
             dmc.AppShellFooter(
                 dmc.Group(
                     [
-                        footer_link("My day", "carbon:home", "/"),
-                        footer_link("Past", "carbon:calendar-heat-map", "/past"),
-                        footer_link("Stats", "carbon:chart-radial", "/stats"),
-                        footer_link("Profile", "carbon:user", "/profile"),
+                        footer_link("My day", "fluent:home-16-regular", "/"),
+                        footer_link("Past", "fluent:calendar-16-regular", "/past"),
+                        footer_link("Stats", "fluent:chart-multiple-16-regular", "/stats"),
+                        footer_link("Profile", "fluent:person-16-regular", "/profile"),
                     ],
                     h="100%",
                     px="1.5rem",
@@ -105,6 +105,11 @@ app.layout = dmc.MantineProvider(
                     "bd": "1px solid var(--mantine-color-gray-light)",
                     "style": {"borderRadius": "calc(0.75rem * var(--mantine-scale))"},
                     "mb": 0,
+                },
+            },
+            "AccordionControl": {
+                "defaultProps": {
+                    "style": {"borderRadius": "calc(0.75rem * var(--mantine-scale))"},
                 },
             },
             "TextInput": {

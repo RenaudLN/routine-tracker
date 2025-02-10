@@ -5,7 +5,7 @@ import pytz
 from dash import Input, Output, callback, no_update, register_page
 from dash_pydantic_form import ModelForm
 from dash_pydantic_utils import model_construct_recursive
-from surrealdb import RecordID
+from flask import session
 
 from routine.components import page_loader
 from routine.db import get_db
@@ -22,7 +22,10 @@ def layout(timezone: str | None = None, **_kwargs):
     today = datetime.now(pytz.timezone(timezone)).strftime("%Y-%m-%d")
 
     db = get_db()
-    data = db.select(RecordID("day", today))
+    data = db.query(
+        "SELECT * FROM ONLY day WHERE date = $date AND user = $user LIMIT 1",
+        {"date": today, "user": session["user"]["email"]},
+    )
 
     routine = (
         model_construct_recursive(data, Routine) if data is not None else Routine.model_construct(date=date.today())
@@ -57,6 +60,13 @@ def save_my_day(data):
 
     db = get_db()
     data = routine.model_dump(mode="json")
-    db.upsert(RecordID("day", data["date"]), data)
+    res = db.query(
+        "SELECT id FROM ONLY day WHERE date = $date AND user = $user LIMIT 1",
+        {"date": data["date"], "user": session["user"]["email"]},
+    )
+    if res:
+        db.update(res["id"], data | {"user": session["user"]["email"]})
+    else:
+        db.create("day", data | {"user": session["user"]["email"]})
 
     return None

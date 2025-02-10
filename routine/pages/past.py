@@ -4,7 +4,7 @@ import dash_mantine_components as dmc
 import pytz
 from dash import Input, Output, callback, dcc, register_page
 from dash_pydantic_form import ModelForm
-from surrealdb import RecordID
+from flask import session
 
 from routine import ids
 from routine.components import page_loader
@@ -45,7 +45,10 @@ def layout(timezone: str | None = None, **_kwargs):
 )
 def update_past(date):
     db = get_db()
-    data = db.select(RecordID("day", date))
+    data = db.query(
+        "SELECT * FROM ONLY day WHERE date = $date AND user = $user LIMIT 1",
+        {"date": date, "user": session["user"]["email"]},
+    )
     if data is None:
         return dmc.Alert(f"No data for {date}", color="teal")
     routine = Routine.model_validate(data)
