@@ -1,7 +1,9 @@
+import os
 from contextlib import suppress
 
 import dash_mantine_components as dmc
 from dash import ClientsideFunction, Dash, Input, Output, _dash_renderer, dcc, page_container
+from dash_auth import OIDCAuth
 from dash_iconify import DashIconify
 
 from routine import ids
@@ -24,6 +26,14 @@ app = Dash(
     suppress_callback_exceptions=True,
 )
 server = app.server
+
+OIDCAuth(
+    app=app,
+    secret_key=os.getenv("SECRET_KEY"),
+    idp_selection_route="/login",
+    public_routes=["/login"],
+    logout_route="/logout",
+)
 
 app.layout = dmc.MantineProvider(
     dmc.AppShell(

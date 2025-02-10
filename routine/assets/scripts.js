@@ -11,5 +11,9 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         switchScheme: (isLightMode) => {
             return isLightMode ? 'light' : 'dark'
         },
+        switchRememberMe: (remember) => {
+            if (!remember) return [false, 1]
+            return ["local", 1]
+        }
     }
 });

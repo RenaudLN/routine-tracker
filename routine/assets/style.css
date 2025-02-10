@@ -53,3 +53,7 @@
         transition: color 150ms;
     }
 }
+
+#react-entry-point:has(#_pages_content:empty) {
+    opacity: 0;
+}

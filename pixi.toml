@@ -20,6 +20,7 @@ dash-pydantic-form = "*"
 [pypi-dependencies]
 surrealdb = ">=1.0.3, <2"
 routine = { editable = true, path = "." }
+dash-auth = { version = ">=2.3.0, <3", extras = ["oidc"] }
 
 [tasks]
 serve = "gunicorn routine.app:server"
