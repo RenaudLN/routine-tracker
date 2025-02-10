@@ -3,7 +3,7 @@ import os
 
 import dash_mantine_components as dmc
 import requests
-from dash import ClientsideFunction, Input, Output, State, clientside_callback, no_update, register_page
+from dash import Input, Output, State, no_update, register_page
 from dash.dash import _ID_LOCATION
 from dash_pydantic_form import ModelForm
 from flask import session
@@ -66,12 +66,12 @@ def layout(**_kwargs):
                         ],
                     ),
                     login_form,
-                    dmc.Checkbox(
-                        "Remember me",
-                        id=ids.login_remember,
-                        persistence=True,
-                        style={"alignSelf": "start"},
-                    ),
+                    # dmc.Checkbox(
+                    #     "Remember me",
+                    #     id=ids.login_remember,
+                    #     persistence=True,
+                    #     style={"alignSelf": "start"},
+                    # ),
                     dmc.Button("Log in", id=ids.login_btn, style={"alignSelf": "stretch"}),
                 ],
                 align="center",
@@ -121,10 +121,10 @@ def sign_in_with_password(_t1, _t2, form_data: dict):
     return "/", no_update
 
 
-# Toggle the 'remember email' behaviour
-clientside_callback(
-    ClientsideFunction(namespace="base", function_name="switchRememberMe"),
-    Output(login_form.ids.form, "data-storeprogress"),
-    Output(login_form.ids.form, "data-getvalues"),
-    Input(ids.login_remember, "checked"),
-)
+# # Toggle the 'remember email' behaviour
+# clientside_callback(
+#     ClientsideFunction(namespace="base", function_name="switchRememberMe"),
+#     Output(login_form.ids.form, "data-storeprogress"),
+#     Output(login_form.ids.form, "data-getvalues"),
+#     Input(ids.login_remember, "checked"),
+# )
