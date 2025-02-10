@@ -30,5 +30,13 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             })
             return [classNames, newIcons]
         },
+        changePastDate: (clicks, ids) => {
+            if (!clicks.some(x => !!x)) return [dash_clientside.no_update, dash_clientside.no_update]
+            const value = dash_clientside.callback_context.triggered_id.date
+            return [
+                value,
+                ids.map(id => id.date == value ? "date-btn active" : "date-btn")
+            ]
+        },
     }
 });

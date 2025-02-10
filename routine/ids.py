@@ -16,3 +16,7 @@ def footer_link(href: str) -> dict:
 
 def footer_link_icon(href: str) -> dict:
     return {"component": "footer-link-icon", "href": href}
+
+
+def past_date_btn(date: str) -> dict:
+    return {"component": "past-date-btn", "date": date}
