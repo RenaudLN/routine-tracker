@@ -10,7 +10,22 @@
   "short_name": "Routine",
   "theme_color": "#ffffff",
   "categories": [],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/wide.png",
+      "sizes": "1600x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Application"
+    },
+    {
+      "src": "/assets/screenshots/narrow.png",
+      "sizes": "800x1600",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Application"
+    }
+  ],
   "icons": [
     {
       "src": "/assets/logo-color.svg",
