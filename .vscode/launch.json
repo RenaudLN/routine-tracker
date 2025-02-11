@@ -11,6 +11,7 @@
                 "FLASK_DEBUG": "1",
                 "REACT_VERSION": "18.2.0",
                 "DEBUG": "1",
+                "DASH_PUBLIC_ASSETS_EXTENSIONS": "js,css,svg,woff,woff2",
             },
             "args": [
                 "run",

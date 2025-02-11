@@ -36,20 +36,15 @@ app.index_string = """<!DOCTYPE html>
 {%favicon%}
 {%css%}
 </head>
-<script type="module">
-   import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
-   const el = document.createElement('pwa-update');
-   document.body.appendChild(el);
-</script>
 <body>
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', ()=> {
-      navigator
-      .serviceWorker
-      .register('./assets/sw01.js')
-      .then(()=>console.log("Ready."))
-      .catch(()=>console.log("Err..."));
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register("./assets/sw.js").then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
     });
   }
 </script>
@@ -68,7 +63,7 @@ OIDCAuth(
     app=app,
     secret_key=os.getenv("SECRET_KEY"),
     idp_selection_route="/login",
-    public_routes=["/login"],
+    public_routes=["/login", "/assets/manifest.json", "/assets/sw.js"],
     logout_route="/logout",
 )
 

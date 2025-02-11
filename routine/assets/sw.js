@@ -1,10 +1,4 @@
-// This is the "Offline page" service worker
-
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
-
 const CACHE = "pwabuilder-page";
-
-// TODO: replace the following with the correct offline fallback page i.e.: const offlineFallbackPage = "offline.html";
 const offlineFallbackPage = "/assets/offline.html";
 
 self.addEventListener("message", (event) => {
@@ -20,9 +14,9 @@ self.addEventListener('install', async (event) => {
   );
 });
 
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable();
-}
+self.addEventListener('activate', function(event) {
+  console.log('[Service Worker] Activating Service Worker ...', event);
+});
 
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
