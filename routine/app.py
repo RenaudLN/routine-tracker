@@ -156,13 +156,13 @@ app.layout = dmc.MantineProvider(
                 },
             },
             "TextInput": {
-                "defaultProps": {"debounce": True},
+                "defaultProps": {"debounce": 500},
             },
             "NumberInput": {
-                "defaultProps": {"debounce": True},
+                "defaultProps": {"debounce": 500},
             },
             "Textarea": {
-                "defaultProps": {"debounce": True},
+                "defaultProps": {"debounce": 500},
             },
         },
     },
