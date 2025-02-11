@@ -13,13 +13,13 @@ app = { solve-group = "default" }
 [dependencies]
 python = "3.12.*"
 gunicorn = ">=23.0.0,<24"
-dash = "<3"
-dash-mantine-components = "<1"
-dash-pydantic-form = "*"
 
 [pypi-dependencies]
 surrealdb = ">=1.0.3, <2"
 routine = { editable = true, path = "." }
+dash = "<3"
+dash-mantine-components = "<1"
+dash-pydantic-form = ">=0.14.6,<1"
 dash-auth = { version = ">=2.3.0, <3", extras = ["oidc"] }
 
 [tasks]

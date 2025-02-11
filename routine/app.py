@@ -23,6 +23,7 @@ app = Dash(
     routing_callback_inputs={
         "timezone": Input(ids.client_timezone, "data"),
     },
+    title="Routine",
     suppress_callback_exceptions=True,
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
 )
@@ -102,8 +103,7 @@ app.layout = dmc.MantineProvider(
             dmc.AppShellFooter(
                 dmc.Group(
                     [
-                        footer_link("My day", "fluent:home-16-regular", "/"),
-                        footer_link("Past", "fluent:calendar-16-regular", "/past"),
+                        footer_link("My Day", "fluent:calendar-16-regular", "/"),
                         footer_link("Stats", "fluent:chart-multiple-16-regular", "/stats"),
                         footer_link("Profile", "fluent:person-16-regular", "/profile"),
                     ],
@@ -149,15 +149,6 @@ app.layout = dmc.MantineProvider(
                 "defaultProps": {
                     "style": {"borderRadius": "calc(0.75rem * var(--mantine-scale))"},
                 },
-            },
-            "TextInput": {
-                "defaultProps": {"debounce": 500},
-            },
-            "NumberInput": {
-                "defaultProps": {"debounce": 500},
-            },
-            "Textarea": {
-                "defaultProps": {"debounce": 500},
             },
         },
     },
