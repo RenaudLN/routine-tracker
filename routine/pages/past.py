@@ -37,6 +37,8 @@ def layout(timezone: str | None = None, **_kwargs):
         "SELECT VALUE date FROM day WHERE user = $user ORDER BY date LIMIT 31",
         {"user": session["user"]["email"]},
     )
+    if today not in db_dates:
+        db_dates.append(today)
     available_dates = [datetime.strptime(val, "%Y-%m-%d") for val in db_dates]
 
     return (
@@ -96,7 +98,14 @@ def update_past(date):
         {"date": date, "user": session["user"]["email"]},
     )
     if data is None:
-        return dmc.Alert(f"No data for {date}", color="teal"), None
+        return ModelForm(
+            Routine.model_construct({"date": date}),
+            aio_id="routine",
+            form_id="past",
+            fields_repr={"date": {"visible": False}},
+            debounce_inputs=2000,
+        ), date
+
     routine = Routine.model_validate(data)
     return ModelForm(
         routine,
