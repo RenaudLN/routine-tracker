@@ -39,7 +39,7 @@
 #                 aio_id="routine",
 #                 form_id="home",
 #                 fields_repr={"date": {"visible": False}},
-#                 debounce_inputs=2000,
+#                 debounce=1500,
 #             ),
 #         ],
 #     )

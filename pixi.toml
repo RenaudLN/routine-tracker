@@ -19,7 +19,7 @@ surrealdb = ">=1.0.3, <2"
 routine = { editable = true, path = "." }
 dash = "<3"
 dash-mantine-components = "<1"
-dash-pydantic-form = ">=0.14.6,<1"
+dash-pydantic-form = ">=0.14.7,<1"
 dash-auth = { version = ">=2.3.0, <3", extras = ["oidc"] }
 
 [tasks]

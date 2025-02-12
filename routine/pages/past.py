@@ -103,7 +103,7 @@ def update_past(date):
         aio_id="routine",
         form_id="past",
         fields_repr={"date": {"visible": False}},
-        debounce_inputs=2000,
+        debounce=1500,
     ), None
 
 
