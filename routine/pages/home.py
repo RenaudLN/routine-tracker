@@ -137,6 +137,7 @@ def update_past(date):
             form_id="past",
             fields_repr={"date": {"visible": False}},
             debounce_inputs=2000,
+            form_layout=CustomAccordionLayout(),
         ), date
 
     routine = Routine.model_validate(data)
