@@ -13,6 +13,7 @@ app = { solve-group = "default" }
 [dependencies]
 python = "3.12.*"
 gunicorn = ">=23.0.0,<24"
+slugify = ">=0.0.1,<0.0.2"
 
 [pypi-dependencies]
 surrealdb = ">=1.0.3, <2"
