@@ -8,6 +8,6 @@ from surrealdb import Surreal
 def get_db():
     """Get and cache a SurrealDB connection."""
     db = Surreal(os.getenv("DB_URL"))
-    db.use("default", "default")
     db.signin({"username": os.getenv("DB_USER"), "password": os.getenv("DB_PWD")})
+    db.use("default", "default")
     return db
