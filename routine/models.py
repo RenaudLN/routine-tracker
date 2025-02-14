@@ -101,38 +101,42 @@ class Routine(BaseModel):
         title=dmc.Group(
             [
                 DashIconify(icon="fluent:food-20-regular", height=20),
-                dmc.Text("Food"),
+                dmc.Text("Food", fw="bold"),
             ],
             gap="xs",
         ),
+        repr_kwargs={"render_type": "simple"},
     )
     exercise: Exercise | None = Field(
         default=None,
         title=dmc.Group(
             [
                 DashIconify(icon="icon-park-outline:sport", height=20),
-                dmc.Text("Exercise"),
+                dmc.Text("Exercise", fw="bold"),
             ],
             gap="xs",
         ),
+        repr_kwargs={"render_type": "simple"},
     )
     mood: Mood | None = Field(
         default=None,
         title=dmc.Group(
             [
                 DashIconify(icon="tabler:mood-smile", height=20),
-                dmc.Text("Mood"),
+                dmc.Text("Mood", fw="bold"),
             ],
             gap="xs",
         ),
+        repr_kwargs={"render_type": "simple"},
     )
     sleep: Sleep | None = Field(
         default=None,
         title=dmc.Group(
             [
                 DashIconify(icon="mingcute:sleep-line", height=20),
-                dmc.Text("Sleep"),
+                dmc.Text("Sleep", fw="bold"),
             ],
             gap="xs",
         ),
+        repr_kwargs={"render_type": "simple"},
     )

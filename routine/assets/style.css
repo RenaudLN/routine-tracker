@@ -83,3 +83,7 @@
         background-color: color-mix(in srgb, var(--mantine-color-body), var(--mantine-primary-color-filled) 20%);
     }
 }
+
+.pydf-model-list-accordion-item {
+    border-radius: calc(0.75rem * var(--mantine-scale)) !important;
+}

@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 import dash_mantine_components as dmc
 import pytz
@@ -15,7 +16,8 @@ from dash import (
     no_update,
     register_page,
 )
-from dash_pydantic_form import ModelForm
+from dash.development.base_component import Component
+from dash_pydantic_form import FormLayout, ModelForm
 from flask import session
 
 from routine import ids
@@ -81,6 +83,45 @@ def layout(timezone: str | None = None, **_kwargs):
     )
 
 
+class CustomAccordionLayout(FormLayout):
+    """Custom accordion layout."""
+
+    layout: Literal["custom_accordion"] = "custom_accordion"
+
+    def render(  # noqa: PLR0913
+        self,
+        *,
+        field_inputs: dict[str, Component],
+        aio_id: str,  # noqa: ARG002
+        form_id: str,  # noqa: ARG002
+        path: str,  # noqa: ARG002
+        read_only: bool,  # noqa: ARG002
+        form_cols: int,  # noqa: ARG002
+    ):
+        """Render the custom accordion."""
+        return [
+            self.grid(
+                [field_inputs["date"]]
+                + [
+                    dmc.Accordion(
+                        [
+                            dmc.AccordionItem(
+                                [
+                                    dmc.AccordionControl(v.children.children[0]),
+                                    dmc.AccordionPanel(self.grid(v.children.children[1:])),
+                                ],
+                                value=k,
+                            )
+                            for k, v in field_inputs.items()
+                            if k != "date"
+                        ],
+                        value=None,
+                    )
+                ]
+            )
+        ]
+
+
 @callback(
     Output(ids.past_wrapper, "children"),
     Output(ids.past_previous_date, "data"),
@@ -105,6 +146,7 @@ def update_past(date):
         form_id="past",
         fields_repr={"date": {"visible": False}},
         debounce=1500,
+        form_layout=CustomAccordionLayout(),
     ), None
 
 
