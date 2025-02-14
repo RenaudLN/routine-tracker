@@ -6,6 +6,7 @@ from dash_pydantic_form import ModelForm
 from flask import session
 
 from routine import ids
+from routine.components import CustomAccordionLayout
 from routine.routine_maker import RoutineMaker, field_options
 
 register_page(__name__, "/profile", name="Profile")
@@ -26,6 +27,7 @@ def layout(**_kwargs):
                 RoutineMaker,
                 aio_id="routine",
                 form_id="maker",
+                debounce=1000,
                 fields_repr={
                     "blocks": {
                         "fields_repr": {
@@ -51,6 +53,7 @@ def layout(**_kwargs):
                     },
                 },
             ),
+            dmc.Box(id="tmp"),
         ],
         gap="1rem",
         align="stretch",
@@ -67,3 +70,30 @@ def logout(n_clicks):
         return no_update
     session.clear()
     return "/login"
+
+
+@callback(
+    Output("tmp", "children"),
+    Input(ModelForm.ids.main("routine", "maker"), "data"),
+    prevent_initial_call=True,
+)
+def show_routine(data):
+    try:
+        routine = RoutineMaker.model_validate(data)
+        routine_model = routine.to_model()
+    except Exception:
+        return "..."
+
+    return ModelForm(
+        routine_model,
+        aio_id="routine",
+        form_id="preview",
+        form_layout=CustomAccordionLayout(),
+        # fields_repr={
+        #     "blocks": {
+        #         "fields_repr": {
+        #             "name"
+        #         },
+        #     },
+        # },
+    )

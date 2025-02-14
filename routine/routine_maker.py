@@ -1,16 +1,20 @@
+from collections import defaultdict
 from datetime import date
 from typing import Annotated, ClassVar, Literal, get_args
 
-from pydantic import BaseModel, Field, create_model
-from slugify import slugify
+import dash_mantine_components as dmc
+from dash_iconify import DashIconify
+from pydantic import BaseModel, Field, create_model, model_validator
 
-CATEGORIES = [
-    "Exercise",
-    "Mood",
-    "Food",
-    "Sleep",
-    "Pain",
-]
+from routine.utils import slugify
+
+CATEGORIES = {
+    "Exercise": "icon-park-outline:sport",
+    "Mood": "tabler:mood-smile",
+    "Food": "fluent:food-20-regular",
+    "Sleep": "mingcute:sleep-line",
+    "Pain": "healthicons:pain",
+}
 
 
 class FieldModel(BaseModel):
@@ -190,21 +194,59 @@ field_options = [
 
 
 class RoutineBlock(BaseModel):
-    category: str = Field(
-        json_schema_extra={
-            "repr_type": "Tags",
-            "repr_kwargs": {"maxTags": 1, "data": CATEGORIES},
-        },
-    )
+    name: Literal[tuple(CATEGORIES)] = Field(title="Category")
     fields: list[AllFieldModelUnion] = Field(default_factory=list)
+
+    def to_model(self):
+        try:
+            return create_model(
+                f"{self.slug.title()}_", **{field.slug: field.to_dynamic_field() for field in self.fields}
+            )
+        except Exception as exc:
+            import traceback
+
+            traceback.print_exc()
+            raise exc
+
+    @property
+    def slug(self):
+        return slugify(self.name).replace("-", "_")
 
 
 class RoutineMaker(BaseModel):
     blocks: list[RoutineBlock] = Field(default_factory=list)
 
+    @model_validator(mode="after")
+    def ensure_block_category_uniqueness(self):
+        category_count = defaultdict(lambda: 0)
+        for block in self.blocks:
+            category_count[block.name] += 1
+            if category_count[block.name] > 1:
+                raise ValueError(f"Category {block.name} is used more than once")
+        return self
+
     def to_model(self):
         try:
-            return create_model("Custom_", **{field.slug: field.to_dynamic_field() for field in self.fields})
+            return create_model(
+                "Custom_",
+                **{
+                    block.slug: (
+                        block.to_model(),
+                        Field(
+                            default=None,
+                            title=dmc.Group(
+                                [
+                                    DashIconify(icon=CATEGORIES.get(block.name, "ph:empty-light"), height=20),
+                                    dmc.Text(block.name, fw="bold"),
+                                ],
+                                gap="xs",
+                            ),
+                            json_schema_extra={"repr_kwargs": {"render_type": "simple"}},
+                        ),
+                    )
+                    for block in self.blocks
+                },
+            )
         except Exception as exc:
             import traceback
 
