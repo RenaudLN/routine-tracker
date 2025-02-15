@@ -47,8 +47,10 @@ class Activity(BaseModel):
 
     name: str
     duration: int = Field(default=0, title="Duration", repr_kwargs={"placeholder": "min", "suffix": " min"}, ge=0)
-    intensity: float = Field(default=0, title="Intensity", repr_type="Rating", repr_kwargs={"fractions": 2})
-    Feeling: float = Field(default=0, title="Feeling", repr_type="Rating", repr_kwargs={"fractions": 2})
+    intensity: float = Field(
+        default=0, title="Intensity", repr_type="Rating", repr_kwargs={"fractions": 2, "size": "xl"}
+    )
+    Feeling: float = Field(default=0, title="Feeling", repr_type="Rating", repr_kwargs={"fractions": 2, "size": "xl"})
 
     def __str__(self) -> str:
         return self["name"] or "-"
@@ -81,14 +83,14 @@ class Mood(BaseModel):
         repr_type="Tags",
         repr_kwargs={"n_cols": 1.0, "data": moods},
     )
-    overall: float = Field(default=0, title="Rating", repr_type="Rating", repr_kwargs={"fractions": 2})
+    overall: float = Field(default=0, repr_type="Rating", repr_kwargs={"fractions": 2, "size": "xl"})
     detail: str | None = Field(default=None, repr_type="Textarea", repr_kwargs={"n_cols": 1.0})
 
 
 class Sleep(BaseModel):
     """Sleep model."""
 
-    rating: float = Field(default=0, title="Rating", repr_type="Rating", repr_kwargs={"fractions": 2})
+    rating: float = Field(default=0, repr_type="Rating", repr_kwargs={"fractions": 2, "size": "xl"})
     detail: str | None = Field(default=None, repr_type="Textarea", repr_kwargs={"n_cols": 1.0})
 
 

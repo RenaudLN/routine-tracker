@@ -96,7 +96,7 @@ class RatingFieldModel(FieldModel):
 
     label = "Rating"
     annotation = float
-    default_repr = {"repr_type": "Rating"}
+    default_repr = {"repr_type": "Rating", "repr_kwargs": {"fractions": 2, "size": "xl"}}
 
 
 class DateFieldModel(FieldModel):
