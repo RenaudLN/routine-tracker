@@ -10,6 +10,7 @@ login_btn = "__login-btn"
 login_remember = "__login-remember"
 login_overlay = "__login-overlay"
 logout_btn = "__logout-btn"
+save_routine_btn = "__save-routine-btn"
 
 
 def footer_link(href: str) -> dict:

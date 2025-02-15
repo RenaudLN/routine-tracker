@@ -1,12 +1,12 @@
 import dash_mantine_components as dmc
-from dash import Input, Output, callback, no_update, register_page
+from dash import Input, Output, State, callback, no_update, register_page
 from dash.dash import _ID_LOCATION
 from dash_iconify import DashIconify
 from dash_pydantic_form import ModelForm
 from flask import session
 
 from routine import ids
-from routine.components import CustomAccordionLayout
+from routine.db import count_days_using_routine, create_routine, get_latest_routine, update_routine
 from routine.routine_maker import RoutineMaker, field_options
 
 register_page(__name__, "/profile", name="Profile")
@@ -14,6 +14,13 @@ register_page(__name__, "/profile", name="Profile")
 
 def layout(**_kwargs):
     """Profile page layout."""
+
+    routine_data = get_latest_routine(session["user"]["email"])
+    if routine_data is None:
+        # TODO: Default routine
+        pass
+
+    routine_maker = RoutineMaker(**routine_data)
 
     return dmc.Stack(
         p="1rem",
@@ -23,8 +30,9 @@ def layout(**_kwargs):
                 dmc.Button("Logout", id=ids.logout_btn, leftSection=DashIconify(icon="carbon:logout", height=16)),
             ),
             dmc.Space(h="sm"),
+            dmc.Title("My Routine", order=3),
             ModelForm(
-                RoutineMaker,
+                routine_maker,
                 aio_id="routine",
                 form_id="maker",
                 debounce=1000,
@@ -53,7 +61,9 @@ def layout(**_kwargs):
                     },
                 },
             ),
-            dmc.Box(id="tmp"),
+            dmc.Box(
+                dmc.Button("Save", id=ids.save_routine_btn, leftSection=DashIconify(icon="carbon:save", height=16)),
+            ),
         ],
         gap="1rem",
         align="stretch",
@@ -73,27 +83,26 @@ def logout(n_clicks):
 
 
 @callback(
-    Output("tmp", "children"),
-    Input(ModelForm.ids.main("routine", "maker"), "data"),
+    Output(ModelForm.ids.errors("routine", "maker"), "data"),
+    Input(ids.save_routine_btn, "n_clicks"),
+    State(ModelForm.ids.main("routine", "maker"), "data"),
     prevent_initial_call=True,
+    running=[Output(ids.save_routine_btn, "loading"), True, False],
 )
-def show_routine(data):
+def save_routine(n_clicks, data):
+    if not n_clicks:
+        return no_update
     try:
-        routine = RoutineMaker.model_validate(data)
-        routine_model = routine.to_model()
-    except Exception:
-        return "..."
+        routine_maker = RoutineMaker.model_validate(data)
+    except Exception as exc:
+        return {":".join([str(x) for x in error["loc"]]): "Invalid value" for error in exc.errors()}
 
-    return ModelForm(
-        routine_model,
-        aio_id="routine",
-        form_id="preview",
-        form_layout=CustomAccordionLayout(),
-        # fields_repr={
-        #     "blocks": {
-        #         "fields_repr": {
-        #             "name"
-        #         },
-        #     },
-        # },
-    )
+    user = session["user"]["email"]
+    routine_ref = get_latest_routine(user)["id"]
+    count = count_days_using_routine(routine_ref)
+    if count > 0:
+        create_routine(routine_maker.model_dump(mode="json"), user)
+    else:
+        update_routine(routine_ref, routine_maker.model_dump(mode="json"), user)
+
+    return None

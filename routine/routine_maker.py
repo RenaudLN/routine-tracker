@@ -229,6 +229,8 @@ class RoutineMaker(BaseModel):
         try:
             return create_model(
                 "Custom_",
+                date=(date, Field(default_factory=date.today, json_schema_extra={"repr_kwargs": {"visible": False}})),
+                routine_ref=(str, Field(default=None, json_schema_extra={"repr_kwargs": {"visible": False}})),
                 **{
                     block.slug: (
                         block.to_model(),
