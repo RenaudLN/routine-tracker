@@ -32,4 +32,4 @@ def create_routine(data: dict, user: str) -> RecordID:
 
 def update_routine(ref: RecordID, data: dict, user: str) -> None:
     db = get_db()
-    db.update(ref, data | {"user": user})
+    db.update(ref, data | {"user": user, "timestamp": int(time.time())})
