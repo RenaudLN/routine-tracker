@@ -12,7 +12,7 @@ from routine.routine_maker import RoutineMaker, field_options
 register_page(__name__, "/profile", name="Profile")
 
 
-def layout(**_kwargs):
+def layout(timezone: str | None = None, **_kwargs):
     """Profile page layout."""
 
     routine_data = get_latest_routine(session["user"]["email"])
@@ -26,6 +26,7 @@ def layout(**_kwargs):
         p="1rem",
         children=[
             dmc.Text(f"Logged in as {session['user']['email']}"),
+            dmc.Text(f"Timezone: {timezone}"),
             dmc.Box(
                 dmc.Button("Logout", id=ids.logout_btn, leftSection=DashIconify(icon="carbon:logout", height=16)),
             ),
