@@ -97,7 +97,7 @@ class Sleep(BaseModel):
 class Routine(BaseModel):
     """Routine model."""
 
-    date: datetime.date = Field(default_factory=datetime.date.today)
+    date: datetime.date
     food: Food | None = Field(
         default=None,
         title=dmc.Group(

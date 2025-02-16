@@ -26,7 +26,7 @@ def layout(timezone: str | None = None, **_kwargs):
         p="1rem",
         children=[
             dmc.Text(f"Logged in as {session['user']['email']}"),
-            dmc.Text(f"Timezone: {timezone}"),
+            dmc.Text(f"Time zone: {timezone}", size="xs", c="dimmed", mt="-1rem"),
             dmc.Box(
                 dmc.Button("Logout", id=ids.logout_btn, leftSection=DashIconify(icon="carbon:logout", height=16)),
             ),

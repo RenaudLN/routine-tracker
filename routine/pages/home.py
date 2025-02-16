@@ -61,6 +61,8 @@ def layout(timezone: str | None = None, **_kwargs):
                         justify="center",
                         wrap="nowrap",
                     ),
+                    offsetScrollbars=True,
+                    id=ids.past_date_scroll,
                 ),
                 dmc.DateInput(
                     value=today,
@@ -71,7 +73,7 @@ def layout(timezone: str | None = None, **_kwargs):
                 dmc.Box(
                     [
                         dmc.LoadingOverlay(id=ids.past_overlay, visible=False),
-                        dmc.Box(dmc.Skeleton(h="20rem"), id=ids.past_wrapper, mt="1.5rem"),
+                        dmc.Box(dmc.Skeleton(h="20rem"), id=ids.past_wrapper, mt="0.75rem"),
                         dcc.Store(id=ids.past_previous_date, data=None),
                     ],
                     pos="relative",
@@ -91,7 +93,7 @@ def update_past(date):
     data = get_day(date=date, user=session["user"]["email"])
     if data is None:
         return ModelForm(
-            Routine.model_construct({"date": date}),
+            Routine.model_construct(date=date),
             aio_id="routine",
             form_id="past",
             fields_repr={"date": {"visible": False}},
@@ -147,4 +149,11 @@ clientside_callback(
     Input(ids.past_date_btn(ALL), "n_clicks"),
     State(ids.past_date_btn(ALL), "id"),
     prevent_initial_call=True,
+)
+
+
+clientside_callback(
+    ClientsideFunction(namespace="base", function_name="scrollToLatest"),
+    Output(ids.past_date_scroll, "className"),
+    Input(ids.past_date_scroll, "id"),
 )

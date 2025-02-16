@@ -38,5 +38,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
                 ids.map(id => id.date == value ? "date-btn active" : "date-btn")
             ]
         },
+        scrollToLatest: (id) => {
+            const element = document.getElementById(id).children[0]
+            element.scrollBy(element.scrollWidth, 0)
+            return dash_clientside.no_update
+        }
     }
 });
