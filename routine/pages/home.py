@@ -98,7 +98,7 @@ def update_past(date):
         routine_data = get_latest_routine(user)
         Routine = RoutineMaker(**routine_data).to_model()
         return ModelForm(
-            Routine.model_construct(date=date, routine_ref=routine_data["id"]),
+            Routine.model_construct(date=date, routine_ref=str(routine_data["id"])),
             aio_id="routine",
             form_id="past",
             fields_repr={"date": {"visible": False}},
