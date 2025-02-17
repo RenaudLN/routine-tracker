@@ -1,4 +1,7 @@
+from datetime import datetime
+
 import dash_mantine_components as dmc
+import pytz
 from dash import Input, Output, State, callback, no_update, register_page
 from dash.dash import _ID_LOCATION
 from dash_iconify import DashIconify
@@ -7,6 +10,7 @@ from flask import session
 
 from routine import ids
 from routine.db import count_days_using_routine, create_routine, get_latest_routine, update_routine
+from routine.db.day import get_day_ref, merge_day
 from routine.routine_maker import RoutineMaker, field_options
 
 register_page(__name__, "/profile", name="Profile")
@@ -87,10 +91,11 @@ def logout(n_clicks):
     Output(ModelForm.ids.errors("routine", "maker"), "data"),
     Input(ids.save_routine_btn, "n_clicks"),
     State(ModelForm.ids.main("routine", "maker"), "data"),
+    State(ids.client_timezone, "data"),
     prevent_initial_call=True,
     running=[Output(ids.save_routine_btn, "loading"), True, False],
 )
-def save_routine(n_clicks, data):
+def save_routine(n_clicks, data, timezone):
     if not n_clicks:
         return no_update
     try:
@@ -99,10 +104,14 @@ def save_routine(n_clicks, data):
         return {":".join([str(x) for x in error["loc"]]): "Invalid value" for error in exc.errors()}
 
     user = session["user"]["email"]
+    today = datetime.now(pytz.timezone(timezone)).strftime("%Y-%m-%d")
     routine_ref = get_latest_routine(user)["id"]
-    count = count_days_using_routine(routine_ref)
+    count = count_days_using_routine(routine_ref, today)
     if count > 0:
-        create_routine(routine_maker.model_dump(mode="json"), user)
+        routine_ref = create_routine(routine_maker.model_dump(mode="json"), user)
+        today_ref = get_day_ref(today, user)
+        if today_ref is not None:
+            merge_day(today_ref, {"routine_ref": routine_ref})
     else:
         update_routine(routine_ref, routine_maker.model_dump(mode="json"), user)
 

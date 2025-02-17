@@ -20,9 +20,11 @@ from flask import session
 
 from routine import ids
 from routine.components import CustomAccordionLayout, page_loader
-from routine.db import create_day, get_dates, get_day, get_day_ref, update_day
-from routine.models import Routine
+from routine.db import create_day, get_dates, get_day, get_day_ref, get_latest_routine, update_day
+from routine.db.routine_model import get_routine
+from routine.routine_maker import RoutineMaker
 
+# from routine.models import Routine
 register_page(__name__, path="/", name="My day")
 
 
@@ -90,10 +92,13 @@ def layout(timezone: str | None = None, **_kwargs):
     running=[(Output(ids.past_overlay, "visible"), True, False)],
 )
 def update_past(date):
-    data = get_day(date=date, user=session["user"]["email"])
+    user = session["user"]["email"]
+    data = get_day(date=date, user=user)
     if data is None:
+        routine_data = get_latest_routine(user)
+        Routine = RoutineMaker(**routine_data).to_model()
         return ModelForm(
-            Routine.model_construct(date=date),
+            Routine.model_construct(date=date, routine_ref=routine_data["id"]),
             aio_id="routine",
             form_id="past",
             fields_repr={"date": {"visible": False}},
@@ -101,6 +106,8 @@ def update_past(date):
             form_layout=CustomAccordionLayout(),
         ), date
 
+    routine_data = get_routine(data["routine_ref"])
+    Routine = RoutineMaker(**routine_data).to_model()
     routine = Routine.model_validate(data)
     return ModelForm(
         routine,
@@ -126,12 +133,15 @@ def save_my_day(data, previous_date):
     if data.get("date") != previous_date:
         return no_update, data.get("date")
 
+    routine_data = get_routine(data["routine_ref"])
+    Routine = RoutineMaker(**routine_data).to_model()
     try:
         routine = Routine.model_validate(data)
     except Exception as exc:
         return {":".join([str(x) for x in error["loc"]]): "Invalid value" for error in exc.errors()}
 
     data = routine.model_dump(mode="json")
+    data["routine_ref"] = routine_data["id"]
     user = session["user"]["email"]
     ref = get_day_ref(data["date"], user)
     if ref:

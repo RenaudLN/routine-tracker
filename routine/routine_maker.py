@@ -4,7 +4,8 @@ from typing import Annotated, ClassVar, Literal, get_args
 
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
-from pydantic import BaseModel, Field, create_model, model_validator
+from pydantic import BaseModel, Field, PlainValidator, create_model, model_validator
+from surrealdb import RecordID
 
 from routine.utils import slugify
 
@@ -146,6 +147,14 @@ class MultiSelectFieldModel(FieldModel):
         return {"orientation": "horizontal"} if self.use_checklist else {}
 
 
+class TagFieldModel(FieldModel):
+    type_: Literal["tags"] = "tags"
+
+    label = "Tags"
+    annotation = list[str]
+    default_repr = {"repr_type": "Tags"}
+
+
 FieldModelUnion = Annotated[
     StringFieldModel
     | TextareaFieldModel
@@ -179,7 +188,8 @@ AllFieldModelUnion = Annotated[
     | DateFieldModel
     | SelectFieldModel
     | MultiSelectFieldModel
-    | ListFieldModel,
+    | ListFieldModel
+    | TagFieldModel,
     Field(discriminator="type_"),
 ]
 
@@ -212,6 +222,9 @@ class RoutineBlock(BaseModel):
     def slug(self):
         return slugify(self.name).replace("-", "_")
 
+    def __str__(self):
+        return self.name
+
 
 class RoutineMaker(BaseModel):
     blocks: list[RoutineBlock] = Field(default_factory=list)
@@ -225,12 +238,15 @@ class RoutineMaker(BaseModel):
                 raise ValueError(f"Category {block.name} is used more than once")
         return self
 
-    def to_model(self):
+    def to_model(self) -> type[BaseModel]:
         try:
             return create_model(
-                "Custom_",
+                "Routine_",
                 date=(date, Field(default_factory=date.today, json_schema_extra={"repr_kwargs": {"visible": False}})),
-                routine_ref=(str, Field(default=None, json_schema_extra={"repr_kwargs": {"visible": False}})),
+                routine_ref=(
+                    Annotated[str, PlainValidator(lambda x: str(x) if isinstance(x, RecordID) else x)],
+                    Field(default=None, json_schema_extra={"repr_kwargs": {"visible": False}}),
+                ),
                 **{
                     block.slug: (
                         block.to_model(),
@@ -254,3 +270,34 @@ class RoutineMaker(BaseModel):
 
             traceback.print_exc()
             raise exc
+
+
+def get_default_routine_maker() -> RoutineMaker:
+    return RoutineMaker(
+        blocks=[
+            RoutineBlock(
+                name="Exercise",
+                fields=[
+                    ListFieldModel(
+                        name="Activities",
+                        fields=[
+                            StringFieldModel(name="Name"),
+                            NumberFieldModel(name="Duration"),
+                            RatingFieldModel(name="Intensity"),
+                            RatingFieldModel(name="Feeling"),
+                        ],
+                    ),
+                    NumberFieldModel(name="Steps"),
+                ],
+            ),
+            RoutineBlock(
+                name="Food",
+                fields=[
+                    TextareaFieldModel(name="Breakfast"),
+                    TextareaFieldModel(name="Lunch"),
+                    TextareaFieldModel(name="Dinner"),
+                    TextareaFieldModel(name="Snacks"),
+                ],
+            ),
+        ]
+    )

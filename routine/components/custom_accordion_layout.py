@@ -24,6 +24,7 @@ class CustomAccordionLayout(FormLayout):
         return [
             self.grid(
                 ([field_inputs["date"]] if "date" in field_inputs else [])
+                + ([field_inputs["routine_ref"]] if "routine_ref" in field_inputs else [])
                 + [
                     dmc.Accordion(
                         [
@@ -35,7 +36,7 @@ class CustomAccordionLayout(FormLayout):
                                 value=k,
                             )
                             for k, v in field_inputs.items()
-                            if k != "date"
+                            if k not in ["date", "routine_ref"]
                         ],
                         value=None,
                     )

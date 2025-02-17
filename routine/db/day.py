@@ -48,11 +48,18 @@ def update_day(day_id: RecordID, data: dict, user: str) -> None:
     db.update(day_id, data | {"user": user})
 
 
-def count_days_using_routine(routine_ref: RecordID) -> int:
+def merge_day(day_id: RecordID, data: dict) -> None:
+    """Update day."""
+    db = get_db()
+    db.merge(day_id, data)
+
+
+def count_days_using_routine(routine_ref: RecordID, today: str) -> int:
     db = get_db()
     result = db.query(
-        f"SELECT COUNT(), routine_ref FROM {TABLE} WHERE routine_ref = $routine_ref GROUP BY routine_ref",  # noqa: S608
-        {"routine_ref": str(routine_ref)},
+        f"SELECT COUNT(), routine_ref FROM {TABLE} WHERE routine_ref = $routine_ref "  # noqa: S608
+        "AND date < $today GROUP BY routine_ref",
+        {"routine_ref": routine_ref, "today": today},
     )
     if result:
         return result[0]["count"]
