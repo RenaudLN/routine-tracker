@@ -13,6 +13,7 @@ app = { solve-group = "default" }
 [dependencies]
 python = "3.12.*"
 gunicorn = ">=23.0.0,<24"
+eventlet = ">=0.38.0,<0.39"
 
 [pypi-dependencies]
 surrealdb = ">=1.0.3, <2"
@@ -25,7 +26,7 @@ dash-socketio = ">=1.1.1, <2"
 flask-socketio = ">=5.5.1, <6"
 
 [tasks]
-serve = "gunicorn routine.app:server"
+serve = "gunicorn --worker-class eventlet -w 1 routine.app:server"
 
 [feature.dev.dependencies]
 ruff = "*"
