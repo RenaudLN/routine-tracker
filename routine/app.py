@@ -5,6 +5,8 @@ import dash_mantine_components as dmc
 from dash import ClientsideFunction, Dash, Input, Output, _dash_renderer, dcc, page_container
 from dash_auth import OIDCAuth
 from dash_iconify import DashIconify
+from dash_socketio import DashSocketIO
+from flask_socketio import SocketIO
 
 from routine import ids
 from routine.components import footer_link
@@ -27,6 +29,8 @@ app = Dash(
     suppress_callback_exceptions=True,
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
 )
+
+socketio = SocketIO(app.server)
 
 app.index_string = """<!DOCTYPE html>
 <html>
@@ -118,6 +122,7 @@ app.layout = dmc.MantineProvider(
             dmc.NotificationProvider(position="top-right"),
             dmc.Box(id=ids.notifications_wrapper),
             dcc.Store(id=ids.client_timezone),
+            DashSocketIO(id=ids.socketio),
         ],
         header={"height": "3rem"},
         footer={"height": "3rem"},
@@ -168,6 +173,12 @@ app.clientside_callback(
     ClientsideFunction(namespace="base", function_name="getTimezone"),
     Output(ids.client_timezone, "data"),
     Input(ids.client_timezone, "id"),
+)
+
+app.clientside_callback(
+    ClientsideFunction(namespace="base", function_name="showConnecting"),
+    Output(ids.notifications_wrapper, "children"),
+    Input(ids.socketio, "connected"),
 )
 
 

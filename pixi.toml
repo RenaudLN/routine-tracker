@@ -21,6 +21,8 @@ dash = "<3"
 dash-mantine-components = "<1"
 dash-pydantic-form = ">=0.14.8,<1"
 dash-auth = { version = ">=2.3.0, <3", extras = ["oidc"] }
+dash-socketio = ">=1.1.1, <2"
+flask-socketio = ">=5.5.1, <6"
 
 [tasks]
 serve = "gunicorn routine.app:server"
