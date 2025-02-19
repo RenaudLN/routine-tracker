@@ -13,6 +13,7 @@ login_overlay = "__login-overlay"
 logout_btn = "__logout-btn"
 save_routine_btn = "__save-routine-btn"
 socketio = "__socketio"
+main_loader = "__main-loader"
 
 
 def footer_link(href: str) -> dict:

@@ -43,30 +43,6 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             element.scrollBy(element.scrollWidth, 0)
             return dash_clientside.no_update
         },
-        showConnecting: (connected) => {
-            if (connected) {
-                console.log("Connected!")
-                return {
-                    namespace: "dash_mantine_components",
-                    type: "Notification",
-                    props: {
-                        action: "hide",
-                        id: "connecting-notification",
-                    },
-                }
-            }
-            console.log("Connecting...")
-            return {
-                namespace: "dash_mantine_components",
-                type: "Notification",
-                props: {
-                    message: "Re-connecting",
-                    loading: true,
-                    action: "show",
-                    autoClose: false,
-                    id: "connecting-notification",
-                },
-            }
-        },
+        showConnecting: (connected) => connected ? "main-loader" : "main-loader visible",
     }
 });

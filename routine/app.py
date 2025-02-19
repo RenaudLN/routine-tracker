@@ -123,6 +123,17 @@ app.layout = dmc.MantineProvider(
             dmc.Box(id=ids.notifications_wrapper),
             dcc.Store(id=ids.client_timezone),
             DashSocketIO(id=ids.socketio),
+            dmc.Box(
+                dmc.Stack(
+                    [
+                        dmc.Image(src="/assets/logo-color.svg", w="5rem"),
+                        dmc.Text("Routine is getting ready...", size="sm"),
+                    ],
+                    align="center",
+                ),
+                id=ids.main_loader,
+                className="main-loader",
+            ),
         ],
         header={"height": "3rem"},
         footer={"height": "3rem"},
@@ -177,7 +188,7 @@ app.clientside_callback(
 
 app.clientside_callback(
     ClientsideFunction(namespace="base", function_name="showConnecting"),
-    Output(ids.notifications_wrapper, "children"),
+    Output(ids.main_loader, "className"),
     Input(ids.socketio, "connected"),
 )
 

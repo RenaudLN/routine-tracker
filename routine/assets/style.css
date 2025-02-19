@@ -87,3 +87,16 @@
 .pydf-model-list-accordion-item {
     border-radius: calc(0.75rem * var(--mantine-scale)) !important;
 }
+
+.main-loader {
+    display: none;
+    background-color: var(--mantine-color-body);
+    position: fixed;
+    inset: 0;
+    place-content: center;
+    z-index: 10000;
+
+    &.visible {
+        display: grid;
+    }
+}
